@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
+import { Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Reveal from '@/components/Reveal'
 import { flights } from '@/lib/data'
@@ -9,7 +10,7 @@ import { createReference, formatCurrency, formatDateTime, formatDuration, getFli
 
 const extraPrices = { baggage: 25, seatSelection: 15, flexibleTicket: 35, prioritySupport: 18 }
 
-export default function BookingPage() {
+function BookingPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const flight = getFlightById(flights, searchParams.get('flightId'))
@@ -100,5 +101,13 @@ export default function BookingPage() {
         </div>
       </section>
     </main>
+  )
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={<main className="page-shell"><section className="section-block"><div className="container">Loading booking...</div></section></main>}>
+      <BookingPageContent />
+    </Suspense>
   )
 }

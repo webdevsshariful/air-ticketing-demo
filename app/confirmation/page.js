@@ -3,12 +3,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Reveal from '@/components/Reveal'
 import { flights } from '@/lib/data'
 import { formatCurrency, formatDateTime, formatDuration, getFlightById, readBookings } from '@/lib/store'
 
-export default function ConfirmationPage() {
+function ConfirmationPageContent() {
   const searchParams = useSearchParams()
   const reference = searchParams.get('reference')
   const [booking, setBooking] = useState(null)
@@ -52,5 +53,13 @@ export default function ConfirmationPage() {
         </div>
       </section>
     </main>
+  )
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<main className="page-shell"><section className="section-block"><div className="container">Loading confirmation...</div></section></main>}>
+      <ConfirmationPageContent />
+    </Suspense>
   )
 }

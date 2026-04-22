@@ -1,7 +1,7 @@
 'use client'
 
+import { Suspense, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import SearchForm from '@/components/SearchForm'
 import FlightCard from '@/components/FlightCard'
@@ -9,7 +9,7 @@ import Reveal from '@/components/Reveal'
 import { airports, flights } from '@/lib/data'
 import { formatCurrency, getAirportLabel } from '@/lib/store'
 
-export default function ResultsPage() {
+function ResultsPageContent() {
   const searchParams = useSearchParams()
 
   const from = searchParams.get('from') || ''
@@ -230,5 +230,13 @@ export default function ResultsPage() {
         </div>
       </section>
     </main>
+  )
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={<main className="page-shell"><section className="section-block"><div className="container">Loading results...</div></section></main>}>
+      <ResultsPageContent />
+    </Suspense>
   )
 }
